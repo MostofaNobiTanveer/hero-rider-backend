@@ -25,7 +25,8 @@ async function run() {
     const database = client.db('hero-rider');
     const usersCollection = database.collection('users');
     const servicesCollection = database.collection('services');
-    const ridersCollection = database.collection('riders');
+    const ordersCollection = database.collection('orders');
+    // const ridersCollection = database.collection('riders');
     // const ordersCollection = database.collection("orders");
     // const productsCollection = database.collection("products");
 
@@ -71,8 +72,37 @@ async function run() {
     // get all users
     app.get('/users', async (req, res) => {
       const cursor = usersCollection.find({});
-      const users = await cursor.toArray();
-      res.json(users);
+      const page = req.query.page;
+      const size = parseInt(req.query.size);
+      const count = await cursor.count();
+      let users;
+      if (page) {
+        users = await cursor
+          .skip(page * size)
+          .limit(size)
+          .toArray();
+      } else {
+        users = await cursor.toArray();
+      }
+      res.json({ count, users });
+    });
+
+    // // delete users
+    // app.delete('users', async(req, res) => {
+
+    // })
+
+    // block a user
+    app.put('/users', async (req, res) => {
+      const result = await usersCollection.updateOne(
+        { _id: ObjectId(req.body._id) },
+        {
+          $set: {
+            blocked: req.body.blocked,
+          },
+        }
+      );
+      res.json(result);
     });
 
     // make an user admin
@@ -100,8 +130,40 @@ async function run() {
       res.json({ admin: isAdmin, rider: isRider });
     });
 
-    // // **************************
-    // // *REVIEW*
+    // **************************
+    // *Payment intent*
+
+    app.post('/create-payment-intent', async (req, res) => {
+      const paymentInfo = req.body;
+      const amount = paymentInfo.price * 100;
+      const paymentIntent = await stripe.paymentIntents.create({
+        currency: 'usd',
+        amount,
+        payment_method_types: ['card'],
+      });
+      res.json({ clientSecret: paymentIntent.client_secret });
+    });
+
+    // **************************
+    // *Paid services*
+    app.post('/services-ordered', async (req, res) => {
+      const orderedService = req.body;
+      const result = await ordersCollection.insertOne(orderedService);
+      res.json(result);
+    });
+    app.get('/services-ordered', async (req, res) => {
+      const cursor = ordersCollection.find({});
+      const orders = await cursor.toArray();
+      res.json(orders);
+    });
+    app.get('/services-ordered/:email', async (req, res) => {
+      const result = await ordersCollection
+        .find({
+          email: req.params.email,
+        })
+        .toArray();
+      res.json(result);
+    });
 
     // //  update reviews
     // app.post("/reviews", async (req, res) => {
