@@ -81,10 +81,14 @@ async function run() {
       const query = { email: email };
       const user = await usersCollection.findOne(query);
       let isAdmin = false;
+      let isRider = false;
       if (user?.role === 'admin') {
         isAdmin = true;
       }
-      res.json({ admin: isAdmin });
+      if (user?.role === 'rider') {
+        isRider = true;
+      }
+      res.json({ admin: isAdmin, rider: isRider });
     });
 
     // // **************************
