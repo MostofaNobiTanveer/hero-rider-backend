@@ -23,6 +23,7 @@ async function run() {
     await client.connect();
     const database = client.db('hero-rider');
     const usersCollection = database.collection('users');
+    const servicesCollection = database.collection('services');
     const ridersCollection = database.collection('riders');
     // const ordersCollection = database.collection("orders");
     // const productsCollection = database.collection("products");
@@ -38,11 +39,11 @@ async function run() {
       res.json(result);
       console.log(result);
     });
-    // add rider to database
-    app.post('/riders', async (req, res) => {
-      const user = req.body;
-      const result = await ridersCollection.insertOne(user);
-      res.json(result);
+    // get all services
+    app.get('/services', async (req, res) => {
+      const cursor = servicesCollection.find({});
+      const services = await cursor.toArray();
+      res.json(services);
     });
 
     // upsert user
@@ -75,7 +76,7 @@ async function run() {
       res.json(result);
     });
 
-    // check if the user is Admin
+    // check user role
     app.get('/users/:email', async (req, res) => {
       const email = req.params.email;
       const query = { email: email };
