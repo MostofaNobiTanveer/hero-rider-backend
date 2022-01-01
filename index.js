@@ -10,6 +10,7 @@ const port = process.env.PORT || 4000;
 // middlewares
 app.use(cors());
 app.use(express.json());
+
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.jc626.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 
 const client = new MongoClient(uri, {
@@ -32,10 +33,10 @@ async function run() {
     // add user to database
     app.post('/users', async (req, res) => {
       console.log(req.body);
-      // const user = req.body;
-      // const result = await usersCollection.insertOne(user);
-      // res.json(result);
-      // console.log(result);
+      const user = req.body;
+      const result = await usersCollection.insertOne(user);
+      res.json(result);
+      console.log(result);
     });
     // add rider to database
     app.post('/riders', async (req, res) => {
