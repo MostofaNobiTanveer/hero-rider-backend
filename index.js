@@ -26,9 +26,6 @@ async function run() {
     const usersCollection = database.collection('users');
     const servicesCollection = database.collection('services');
     const ordersCollection = database.collection('orders');
-    // const ridersCollection = database.collection('riders');
-    // const ordersCollection = database.collection("orders");
-    // const productsCollection = database.collection("products");
 
     // **************************
     // *USER*
@@ -86,11 +83,6 @@ async function run() {
       }
       res.json({ count, users });
     });
-
-    // // delete users
-    // app.delete('users', async(req, res) => {
-
-    // })
 
     // block a user
     app.put('/users', async (req, res) => {
@@ -164,108 +156,7 @@ async function run() {
         .toArray();
       res.json(result);
     });
-
-    // //  update reviews
-    // app.post("/reviews", async (req, res) => {
-    //   const userReview = req.body;
-    //   const result = await reviewsCollection.insertOne(userReview);
-    //   res.json(result);
-    // });
-
-    // // get all reviews
-    // app.get("/reviews", async (req, res) => {
-    //   const cursor = reviewsCollection.find({});
-    //   const reviews = await cursor.toArray();
-    //   res.json(reviews);
-    // });
-
-    // // **************************
-    // // *PRODUCTS*
-
-    // //  post product
-    // app.post("/products", async (req, res) => {
-    //   const product = req.body;
-    //   const result = await productsCollection.insertOne(product);
-    //   res.json(result);
-    // });
-
-    // // get all products
-    // app.get("/products", async (req, res) => {
-    //   const cursor = productsCollection.find({});
-    //   const products = await cursor.toArray();
-    //   res.json(products);
-    // });
-
-    // // get single product
-    // app.get("/products/:id", async (req, res) => {
-    //   const id = req.params.id;
-    //   const query = { _id: ObjectId(id) };
-    //   const product = await productsCollection.findOne(query);
-    //   res.json(product);
-    // });
-
-    // // DELETE a Product
-    // app.delete("/deleteProduct/:id", async (req, res) => {
-    //   const result = await productsCollection.deleteOne({
-    //     _id: ObjectId(req.params.id),
-    //   });
-    //   res.send(result);
-    // });
-
-    // // **************************
-    // // *ORDERS*
-
-    // // Add Order API
-    // app.post("/placeOrder", async (req, res) => {
-    //   const order = req.body;
-    //   const result = await ordersCollection.insertOne(order);
-    //   res.json(result);
-    // });
-
-    // //GET orders
-    // app.get("/orders", async (req, res) => {
-    //   const cursor = ordersCollection.find({});
-    //   const orders = await cursor.toArray();
-    //   res.send(orders);
-    // });
-
-    // // GET my Orders
-    // app.get("/orders/:email", async (req, res) => {
-    //   const result = await ordersCollection
-    //     .find({
-    //       email: req.params.email,
-    //     })
-    //     .toArray();
-    //   res.send(result);
-    // });
-
-    // // Update an order status
-    // app.put("/updateOrder/:id", async (req, res) => {
-    //   const id = req.params.id;
-    //   const updatedOrder = req.body;
-    //   const filter = { _id: ObjectId(id) };
-    //   const options = { upsert: true };
-    //   const updateDoc = {
-    //     $set: {
-    //       status: updatedOrder.status,
-    //     },
-    //   };
-    //   const result = await ordersCollection.updateOne(
-    //     filter,
-    //     updateDoc,
-    //     options
-    //   );
-    //   res.send(result);
-    // });
-
-    // // DELETE an Order
-    // app.delete("/deleteOrder/:id", async (req, res) => {
-    //   // console.log(req.params.id);
-    //   const result = await ordersCollection.deleteOne({
-    //     _id: ObjectId(req.params.id),
-    //   });
-    //   res.send(result);
-    // });
+    
   } finally {
     // await client.close();
   }
